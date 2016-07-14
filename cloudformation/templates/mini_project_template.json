@@ -1,0 +1,135 @@
+{
+  "Parameters" : {
+
+    "KeyName": {
+      "Description" : "Name of an existing EC2 key pair to enable SSH access to the instances",
+      "Type": "AWS::EC2::KeyPair::KeyName",
+      "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
+    },
+
+    "InstanceType" : {
+      "Description" : "Web Server EC2 instance type",
+      "Type" : "String",
+      "Default" : "t2.small",
+      "AllowedValues" : [ "t1.micro", "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large", "m1.small"]
+,
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    }
+
+  },
+
+    "Resources" : {
+
+        "Ec2Instance" : {
+          "Type" : "AWS::EC2::Instance",
+          "Properties" : {
+            "ImageId" : "ami-f303fb93",
+            "KeyName" : { "Ref" : "KeyName" },
+            "InstanceType" : { "Ref" : "InstanceType" },
+            "NetworkInterfaces": [ {
+              "AssociatePublicIpAddress": "true",
+              "DeviceIndex": "0"
+            } ],
+
+            "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
+                       "#!/bin/bash -xe\n",
+                       "yum update -y aws-cfn-bootstrap\n",
+
+                       "/opt/aws/bin/cfn-init -v ",
+                       "         --stack ", { "Ref" : "AWS::StackName" },
+                       "         --resource Ec2Instance ",
+                       "         --configsets voip_install ",
+                       "         --region ", { "Ref" : "AWS::Region" }, "\n"
+            ]]}}
+
+
+          },
+
+          "Metadata" : {
+            "AWS::CloudFormation::Init" : {
+            "configSets" : {
+            "voip_install" : ["install_chefdk", "install_chef", "install_git", "get_chef_cookbooks", "run_cookbook"]
+          },
+
+         "install_chef" : {
+                "sources" : {
+                "/var/chef/chef-repo" : "http://github.com/opscode/chef-repo/tarball/master"
+                },
+                "files" : {
+                    "/tmp/install.sh" : {
+                        "source" : "https://www.opscode.com/chef/install.sh",
+                        "mode"  : "000400",
+                        "owner" : "root",
+                        "group" : "root"
+                },
+                "/var/chef/chef-repo/.chef/knife.rb" : {
+                    "content" : { "Fn::Join": [ "", [
+                      "cookbook_path [ '/var/chef/chef-repo/cookbooks' ]\n",
+                      "node_path [ '/var/chef/chef-repo/nodes' ]\n"
+                    ]]},
+                    "mode"  : "000400",
+                    "owner" : "root",
+                    "group" : "root"
+                 },
+              "/var/chef/chef-repo/.chef/client.rb" : {
+                "content" : { "Fn::Join": [ "", [
+                  "cookbook_path [ '/var/chef/chef-repo/cookbooks' ]\n",
+                  "node_path [ '/var/chef/chef-repo/nodes' ]\n"
+                ]]},
+                "mode"  : "000400",
+                "owner" : "root",
+                "group" : "root"
+              }
+            },
+            "commands" : {
+              "01_make_chef_readable" : {
+                "command" : "chmod +rx /var/chef"
+              },
+              "02_install_chef" : {
+                "command" : "bash /tmp/install.sh",
+                "cwd"  : "/var/chef"
+              },
+              "03_create_node_list" : {
+                "command" : "chef-client -z -c /var/chef/chef-repo/.chef/client.rb",
+                "cwd" : "/var/chef/chef-repo",
+                "env" : { "HOME" : "/var/chef" }
+              }
+            }
+          },
+
+          "install_chefdk" : {
+            "packages" : {
+              "rpm" : {
+                "chefdk" : "https://opscode-omnibus-packages.s3.amazonaws.com/el/6/x86_64/chefdk-0.2.0-2.el6.x86_64.rpm"
+              }
+            }
+          },
+          "install_git":{
+            "packages" : {
+                "yum" :{
+                    "git" : []
+                }
+            }
+          },
+          "get_chef_cookbooks" : { 
+            "commands" : {
+                "01_clone_repo" : {
+                    "command" : "git clone https://github.com/blank-blank/infrastructure_scripts.git /tmp/infrastructure_scripts"
+                    
+                },
+                "02_move_cookbooks" : {
+                    "command" : "cp -rf /tmp/infrastructure_scripts/chef/cookbooks/* /var/chef/chef-repo/cookbooks/"
+                }
+            
+              }
+           },
+           "run_cookbook" : {
+
+                "command" : "chef-client -z -o helloworld"
+          }
+
+        }
+        }
+    }
+    }
+}
