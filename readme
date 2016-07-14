@@ -3,4 +3,15 @@ Launch a web server with one click
 test first: 
 Tests are written first to describe the behavior which we should ensure is running through the code
 
+
+Prerequsites:
+
+aws cli installed and on path
+ssh keypair
+
+Usage:
+
+git clone https://github.com/blank-blank/stel_mini_project.git
+sh launch_cf_stack.sh mini_project_template.json
+
 	
