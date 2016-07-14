@@ -20,10 +20,10 @@ then
     echo "TEMPLATE_FILEPATH does not exist" 
     exit 1
 fi
-stack_name="mini_project_stack"
+stack_name="miniProjectStack"
 region="us-west-2"
 keypair_name="tim_keypair"
 instance_size="t2.small"
 template_name="mini_project_template.json"
 
-aws cloudformation create-stack --stack-name "$stack_name" --region "$region" --parameters ParameterKey=KeyName,ParameterValue="$keypair_name" ParameterKey=InstanceType,ParameterValue="instance_size" --template-body file:////$TEMPLATE_DIR//$template_name
+aws cloudformation create-stack --stack-name "$stack_name" --region "$region" --parameters ParameterKey=KeyName,ParameterValue="$keypair_name" ParameterKey=InstanceType,ParameterValue="$instance_size" --template-body file://$TEMPLATE_DIR/$template_name
