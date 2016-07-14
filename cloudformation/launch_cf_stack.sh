@@ -26,4 +26,6 @@ keypair_name="tim_keypair"
 instance_size="t2.small"
 template_name="mini_project_template.json"
 
+aws cloudformation validate-template --template-body file://$TEMPLATE_FILEPATH
+
 aws cloudformation create-stack --stack-name "$stack_name" --region "$region" --parameters ParameterKey=KeyName,ParameterValue="$keypair_name" ParameterKey=InstanceType,ParameterValue="$instance_size" --template-body file://$TEMPLATE_DIR/$template_name
