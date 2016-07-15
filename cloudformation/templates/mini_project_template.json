@@ -60,21 +60,17 @@
           },
           "install_ansible":{
 	    "commands" : {
-		"01_clone_repo" : {
-		    "command" : "git clone https://github.com/ansible/ansible.git /opt/ansible"
-		},
-
-		"02_setup_env" : {
-		    "command" : "source /opt/ansible/hacking/env-setup"
-		}
+	        "01_pip_ansible" : {
+		    "command" : "pip install ansible"
+                }
 	    }
-
+	  
           },
 
           "get_playbooks" : { 
             "commands" : {
                 "01_clone_repo" : {
-                    "command" : "git clone https://github.com/blank-blank/stel_mini_project.git /opt/stel_mini_project"
+                    "command" : "sudo git clone https://github.com/blank-blank/stel_mini_project.git /opt/stel_mini_project"
                 }
             
               }
@@ -82,7 +78,7 @@
 
            "run_playbook" : {
 
-                "command" : "ansible-playbook -i 'localhost' -c local /opt/stel_mini_project/ansible/mini_project.yml"
+                "command" : "ansible-playbook -i 'localhost,' -c local /opt/stel_mini_project/ansible/mini_project.yml"
           }
 
         }
