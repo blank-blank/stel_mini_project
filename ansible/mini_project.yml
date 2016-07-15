@@ -9,10 +9,10 @@
 
   tasks:
 
-  - name: install httpd
-    yum: name=httpd state=latest
+    - name: install httpd
+      yum: name=httpd state=latest
 
 
-  - name: test that it ran
-    command: touch ~/aFileFromAnsible
+    - name: test that it ran
+      command: touch ~/aFileFromAnsible
 
