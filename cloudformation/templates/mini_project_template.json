@@ -77,8 +77,10 @@
            },
 
            "run_playbook" : {
+              "01_run_playbook" : {
 
-                "command" : "ansible-playbook -i 'localhost,' -c local /opt/stel_mini_project/ansible/mini_project.yml"
+                  "command" : "sudo /usr/local/bin/ansible-playbook -i 'localhost,' -c local /opt/stel_mini_project/ansible/mini_project.yml"
+	      }
           }
 
         }
