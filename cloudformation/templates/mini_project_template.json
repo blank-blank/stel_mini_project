@@ -48,43 +48,29 @@
           "Metadata" : {
             "AWS::CloudFormation::Init" : {
             "configSets" : {
-            "mini_project_install" : ["install_git", "install_ansible", "get_playbooks", "run_playbook"]
+            "mini_project_install" : ["install_server"]
           },
 
-          "install_git":{
-            "packages" : {
-                "yum" :{
-                    "git" : []
+          "install_server":{
+                "packages" : {
+                    "yum" :{
+                        "nginx" : []
+                    }
+                },
+
+                "services" : {
+                    "sysvinit" : {
+                        "nginx" : {
+                            "enabled" : "true",
+                            "ensureRunning" : "true",
+                            "files" : ["/etc/nginx/nginx.conf"],
+                            "sources" : ["/var/www/html"]
+                        }
+                    }
                 }
-            }
-          },
-          "install_ansible":{
-	    "commands" : {
-	        "01_pip_ansible" : {
-		    "command" : "pip install ansible"
-                }
-	    }
-	  
-          },
-
-          "get_playbooks" : { 
-            "commands" : {
-                "01_clone_repo" : {
-                    "command" : "sudo git clone https://github.com/blank-blank/stel_mini_project.git /opt/stel_mini_project"
-                }
-            
-              }
-           },
-
-           "run_playbook" : {
-              "01_run_playbook" : {
-
-                  "command" : "sudo /usr/local/bin/ansible-playbook -i 'localhost,' -c local /opt/stel_mini_project/ansible/mini_project.yml"
-	      }
-          }
-
-        }
         }
     }
     }
+}
+}
 }
