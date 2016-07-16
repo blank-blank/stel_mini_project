@@ -57,6 +57,16 @@
                         "nginx" : []
                     }
                 },
+                "files" : {
+                  "/usr/share/nginx/html/index.html" : {
+                    "content" : { "Fn::Join" : ["", [
+                      "Automation for everyone\n"
+                      ]]},
+                    "mode"  : "000644",
+                    "owner" : "root",
+                    "group" : "root"
+                  }
+                },
 
                 "services" : {
                     "sysvinit" : {
@@ -64,7 +74,7 @@
                             "enabled" : "true",
                             "ensureRunning" : "true",
                             "files" : ["/etc/nginx/nginx.conf"],
-                            "sources" : ["/var/www/html"]
+                            "sources" : ["/usr/share/nginx/html"]
                         }
                     }
                 }
