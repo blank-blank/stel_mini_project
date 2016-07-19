@@ -7,11 +7,30 @@ Tests are written first to describe the behavior which we should ensure is runni
 Prerequsites:
 
 aws cli installed and on path
-ssh keypair
+aws cli is configured with api keys in ~/.aws/credentials or scripts are run from an instance with a role to allow creation of ec2 instances
+ssh keypair - the launch script is configured to use my keypair called tim_keypair
+the MiniProjectSecGroup security group exists
+
+
+
 
 Usage:
 
 git clone https://github.com/blank-blank/stel_mini_project.git
+cd stel_mini_project/cloudformation
 sh launch_cf_stack.sh mini_project_template.json
+
+Running the launch_cf_stack.sh script will 
+
+Look in the cloudformation/templates directory
+Run the Cloudformation template that is given as the first parameter on the command line
+Create a stack called miniProjectStack 
+Launch an t2.small Ec2 instance with the security group MiniProjectSecGroup security group
+The instance is based on an Amazon linux AMI and installs Nginx and a basic index file in the standard location.
+The security group will allow 22 and 80 tcp access from anywhere
+Post deployment tests are automatically run after the instance is launched.  The instance id is passed to a Python based test script that will test that the server is up and running, it has the right security group, and the webpage says the correct message.
+The tests in test/instance_tests.py are meant to be run from on the server instance.  These tests include checking for the installation of Nginx, the presence of an index file, the running of the Nginx service, and the availability of the service from localhost.  These are not auatomated but could be.  They are meant to be run remotely via Ansible.
+
+
 
 	
