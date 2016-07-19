@@ -28,7 +28,9 @@
             "InstanceType" : { "Ref" : "InstanceType" },
             "NetworkInterfaces": [ {
               "AssociatePublicIpAddress": "true",
-              "DeviceIndex": "0"
+              "DeviceIndex": "0",
+              "GroupSet" : [ "sg-9d4931fb" ]
+
             } ],
 
             "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
@@ -82,5 +84,13 @@
     }
     }
 }
-}
+},
+
+    "Outputs" : {
+        "InstanceID" : {
+            "Description": "The Instance ID",  
+            "Value" : { "Ref" : "Ec2Instance" }
+        }
+    } 
+
 }
