@@ -41,7 +41,7 @@ template_name="mini_project_template.json"
 aws cloudformation validate-template --template-body file://$TEMPLATE_FILEPATH
 create_stack() { 
 
-    aws cloudformation create-stack --stack-name "$1" --region "$region" --parameters ParameterKey=InstanceType,ParameterValue="$instance_size" --template-body file://$TEMPLATE_DIR/$template_name
+    aws cloudformation create-stack --stack-name "$1" --region "$region" --parameters ParameterKey=InstanceType,ParameterValue="$instance_size" ParameterKey=SubnetId,ParameterValue="subnet-f800eda1" --template-body file://$TEMPLATE_DIR/$template_name
 
 }
 

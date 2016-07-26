@@ -5,9 +5,14 @@
       "Description" : "Web Server EC2 instance type",
       "Type" : "String",
       "Default" : "t2.small",
-      "AllowedValues" : [ "t1.micro", "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large", "m1.small"]
-,
+      "AllowedValues" : [ "t1.micro", "t2.nano", "t2.micro", "t2.small", "t2.medium", "t2.large", "m1.small"],
+
       "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+    "SubnetId" : {
+      "Description" : "Subnet Id in which to launch",
+      "Type" : "String",
+      "Default" : "subnet-67b21c02"
     }
 
   },
@@ -20,6 +25,7 @@
             "ImageId" : "ami-f303fb93",
             "InstanceType" : { "Ref" : "InstanceType" },
             "NetworkInterfaces": [ {
+              "SubnetId":{ "Ref" : "SubnetId" },
               "AssociatePublicIpAddress": "true",
               "DeviceIndex": "0",
               "GroupSet" : [ "sg-9d4931fb" ]
