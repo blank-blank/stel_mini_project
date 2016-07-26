@@ -34,7 +34,6 @@ get_instance_id() {
 #exit
 
 region="us-west-2"
-keypair_name="tim_keypair"
 instance_size="t2.small"
 template_name="mini_project_template.json"
 
@@ -42,7 +41,7 @@ template_name="mini_project_template.json"
 aws cloudformation validate-template --template-body file://$TEMPLATE_FILEPATH
 create_stack() { 
 
-    aws cloudformation create-stack --stack-name "$1" --region "$region" --parameters ParameterKey=KeyName,ParameterValue="$keypair_name" ParameterKey=InstanceType,ParameterValue="$instance_size" --template-body file://$TEMPLATE_DIR/$template_name
+    aws cloudformation create-stack --stack-name "$1" --region "$region" --parameters ParameterKey=InstanceType,ParameterValue="$instance_size" --template-body file://$TEMPLATE_DIR/$template_name
 
 }
 
